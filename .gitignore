@@ -5,7 +5,7 @@
 ### Local files and dirs ###
 input/
 output/
-
+*.exe
 
 
 ### Python ###
