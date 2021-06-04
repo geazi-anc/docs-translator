@@ -1,3 +1,4 @@
+import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from threading import Thread
@@ -39,12 +40,43 @@ def translate(filename):
     # finalizando o driver do chrome
     driver.quit()
 
-
     # por fim, salva o texto traduzido num arquivo TXT, dentro do diretório output
     filename = output_dir/filename.name
 
     with open(filename, "w", encoding="utf-8") as outputfile:
         outputfile.write(text)
+
+
+def strsplit(chars, qty):
+    charslist = [chars[0:qty]]
+    chars = chars.lstrip(chars[0:qty])
+
+    if len(chars) != 0:
+        charslist += strsplit(chars, qty)
+
+    return charslist
+
+
+def get_arg(args):
+    if len(args) != 2:
+        raise IndexError("Requires only one argument: docs or single")
+
+    else:
+        arg = args[1].lower()
+
+    if arg not in ("docs", "single"):
+        raise ValueError("Argument must be docs or single")
+
+    if arg == "single":
+        inputfile = input_dir/"input.txt"
+
+        with open(inputfile, "r", encoding="utf-8") as file:
+            input = file.read()
+            inputs = strsplit(input, 30000)
+
+    inputfile.unlink()
+    for input in inputs:
+        pass
 
 
 ### MAIN ###
