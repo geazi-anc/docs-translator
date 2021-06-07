@@ -1,10 +1,10 @@
 import sys
 import threading
-import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from pathlib import Path
 from datetime import datetime
+from os import system, name
 
 
 ### variables ###
@@ -21,7 +21,7 @@ def translate(filename):
 
     # set chrome options
     chrome_options = Options()
-#    chrome_options.headless = True
+    chrome_options.headless = True
 
     # create driver
     driver = webdriver.Chrome(options=chrome_options)
@@ -37,7 +37,6 @@ def translate(filename):
     input_file.send_keys(str(filename))
 
     # clica no botão traduzir
-    time.sleep(6000)
     driver.find_element_by_xpath(
         '//*[@id="yDmH0d"]/c-wiz/div/div[2]/c-wiz/div[3]/c-wiz/div[2]/c-wiz/div/form/div[2]/div[2]/button/span').click()
 
@@ -112,6 +111,11 @@ def mkfiles(type_of_translation):
             file.write(inputtext)
 
 
+def print_process():
+    _ = system("cls") if name == "nt" else "clear"
+    print(f"\t*{threading.active_count() -1} translations are running*")
+
+
 ### MAIN ###
 # verifica se os diretórios input e output existem. Se não existirem, cria os diretórios
 input_dir.mkdir(exist_ok=True)
@@ -129,8 +133,7 @@ for file in input_dir.iterdir():
 
 # observa as threads em andamento
 while threading.active_count() > 1:
-    print(f"threads ativas: {threading.active_count()}")
-    time.sleep(1)
+    print_process()
 
 # concatena os arquivos num único arquivo
 concat()
