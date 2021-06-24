@@ -15,10 +15,6 @@ output_dir = Path.cwd().parent/"output"
 ### FUNCTIONS ###
 def translate(filename):
 
-    # datetime and output filename
-    current_time = datetime.now().strftime("%H%M%S%f")
-    output_file = output_dir/f"{current_time}.txt"
-
     # set chrome options
     chrome_options = Options()
     chrome_options.headless = True
