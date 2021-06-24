@@ -43,6 +43,8 @@ def translate(filename):
     driver.quit()
 
     # por fim, salva o texto traduzido num arquivo TXT, dentro do diretório output
+    output_file = output_dir/filename.name
+
     with open(output_file, "w", encoding="utf-8") as outputfile:
         outputfile.write(text)
 
@@ -80,7 +82,7 @@ def concat():
         with open(file, "r", encoding="utf-8") as input_file:
             output_texts += input_file.read()
 
-#        file.unlink()
+        file.unlink()
 
     with open(output_file, "w", encoding="utf-8") as file:
         file.write(output_texts)
