@@ -96,7 +96,7 @@ def mkfiles(type_of_translation):
 
     with open(input_file, "r", encoding="utf-8") as file:
         text = file.read()
-        textslist = strsplit(text, 30000)
+        textslist = strsplit(text, 25000)
 
     # remove o arquivo input
     input_file.unlink()
@@ -111,7 +111,7 @@ def mkfiles(type_of_translation):
 
 def print_process():
     _ = system("cls") if name == "nt" else "clear"
-    print(f"\t*{threading.active_count() -1} translations are running*")
+    print(f"\t*{len(inputfiles)} files waiting to be translated*")
 
 
 ### MAIN ###
@@ -124,14 +124,23 @@ output_dir.mkdir(exist_ok=True)
 type_of_translation = get_args(sys.argv)
 mkfiles(type_of_translation)
 
+# cria uma lista com todos os arquivos dentro do diretório input
+inputfiles = list(input_dir.iterdir())
 
-# percorre o diretório input onde estão os arquivos para serem traduzidos, e cria uma thread individual para cada tradução
-for file in input_dir.iterdir():
-    threading.Thread(target=translate, kwargs={"filename": file}).start()
+# então, enquanto houver elementos dentro da lista, realiza os processos a seguir.
+# nota: são criados múltiplos conjuntos de 20 threads, isso significa que são traduzidos apenas 20 arquivos por vez. Isso se dá pois quando há mais de 40 threads trabalhando em paralelo, pode ocorrer esgotamento da memória em disco
+while len(inputfiles) != 0:
 
-# observa as threads em andamento
-while threading.active_count() > 1:
-    print_process()
+    # pega 20 arquivos dentro do diretório input e cria uma thread individual para cada processo de tradução
+    [threading.Thread(target=translate, kwargs={"filename": file}).start() for file in inputfiles[0:20]]
 
-# concatena os arquivos num único arquivo
+    # depois remove da lista esses 20 arquivos que estão sendo traduzidos
+    [inputfiles.remove(element) for element in inputfiles[0:20]]
+
+    # observa as threads em andamento. Quando as 20 threads forem concluídas, pula para o próximo conjunto de tradução
+    while threading.active_count() > 1:
+        print_process()
+
+
+# depois que todos os arquivos dentro do diretório input forem traduzidos, concatena os arquivos traduzidos no diretório output dentro de um único arquivo
 concat()
