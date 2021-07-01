@@ -34,7 +34,8 @@ def translate(filename):
 
     # clica no botão traduzir
 #    time.sleep(10000)
-    driver.find_element_by_css_selector("#yDmH0d > c-wiz > div > div.WFnNle > c-wiz > div.R5HjH > c-wiz > div.oLbzv > c-wiz > div > div > form > div.RiZzuc > div.ld4Jde > div > button > span").click()
+    driver.find_element_by_css_selector(
+        "#yDmH0d > c-wiz > div > div.WFnNle > c-wiz > div.R5HjH > c-wiz > div.oLbzv > c-wiz > div > div > form > div.RiZzuc > div.ld4Jde > div > button > span").click()
 
     # pega o texto que foi traduzido
     text = driver.find_element_by_tag_name("pre").text
