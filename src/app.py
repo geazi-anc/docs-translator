@@ -33,8 +33,8 @@ def translate(filename):
     input_file.send_keys(str(filename))
 
     # clica no botão traduzir
-    driver.find_element_by_xpath(
-        '//*[@id="yDmH0d"]/c-wiz/div/div[2]/c-wiz/div[3]/c-wiz/div[2]/c-wiz/div/form/div[2]/div[2]/button/span').click()
+#    time.sleep(10000)
+    driver.find_element_by_css_selector("#yDmH0d > c-wiz > div > div.WFnNle > c-wiz > div.R5HjH > c-wiz > div.oLbzv > c-wiz > div > div > form > div.RiZzuc > div.ld4Jde > div > button > span").click()
 
     # pega o texto que foi traduzido
     text = driver.find_element_by_tag_name("pre").text
@@ -109,7 +109,7 @@ def mkfiles(type_of_translation):
             file.write(inputtext)
 
 
-def print_process():
+def print_progress():
     _ = system("cls") if name == "nt" else "clear"
     print(f"\t*{len(inputfiles)} files waiting to be translated*")
 
@@ -134,12 +134,12 @@ while len(inputfiles) != 0:
     # pega 20 arquivos dentro do diretório input e cria uma thread individual para cada processo de tradução
     [threading.Thread(target=translate, kwargs={"filename": file}).start() for file in inputfiles[0:20]]
 
-    # depois remove da lista esses 20 arquivos que estão sendo traduzidos
-    [inputfiles.remove(element) for element in inputfiles[0:20]]
-
     # observa as threads em andamento. Quando as 20 threads forem concluídas, pula para o próximo conjunto de tradução
     while threading.active_count() > 1:
-        print_process()
+        print_progress()
+
+    # depois remove da lista esses 20 arquivos que estão sendo traduzidos
+    [inputfiles.remove(element) for element in inputfiles[0:20]]
 
 
 # depois que todos os arquivos dentro do diretório input forem traduzidos, concatena os arquivos traduzidos no diretório output dentro de um único arquivo
